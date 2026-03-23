@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GTI陪玩俱乐部</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        :root {
+            --main-color: #6366F1;
+            --main-light: #8B5CF6;
+            --main-gradient: linear-gradient(90deg, #6366F1, #8B5CF6);
+            --second-color: #3B82F6;
+            --text-light: #BFDBFE;
+            --bg-dark: #0A0A0A;
+            --bg-card: rgba(255,255,255,0.05);
+            --border-color: rgba(99, 102, 241, 0.1);
+            --danger-color: #EF4444;
+            --success-color: #10B981;
+        }
+        body {
+            background: var(--bg-dark);
+            min-height: 100vh;
+            padding-bottom: 70px;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--main-color);
+            border-radius: 4px;
+        }
+        .search-box {
+            margin: 12px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .search-input {
+            flex: 1;
+            height: 48px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 0 18px 0 46px;
+            font-size: 16px;
+            color: #fff;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%236366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+            background-repeat: no-repeat;
+            background-position: 14px center;
+        }
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        .search-btn {
+            height: 48px;
+            padding: 0 28px;
+            background: var(--main-gradient);
+            border: none;
+            border-radius: 24px;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+            flex-shrink: 0;
+        }
+        .notice-bar {
+            margin: 12px 16px;
+            background: linear-gradient(180deg, rgba(191, 219, 254, 0.15), rgba(224, 231, 255, 0.1));
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+        .notice-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .notice-text {
+            font-size: 15px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+        .notice-arrow {
+            font-size: 24px;
+            color: rgba(255,255,255,0.5);
+            flex-shrink: 0;
+        }
+        .week-rank {
+            margin: 12px 16px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+        }
+        .week-rank-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .week-rank-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .week-rank-item:last-child {
+            border-bottom: none;
+        }
+        .rank-avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .rank-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50% !important;
+            object-fit: cover;
+            border: 2px solid var(--main-color);
+        }
+        .rank-status {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--main-color);
+            border: 2px solid var(--bg-dark);
+        }
+        .rank-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .rank-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .rank-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .rank-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .rank-action {
+            font-size: 20px;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+        }
+        .rank-section {
+            margin: 12px 16px;
+            background: linear-gradient(180deg, rgba(224, 231, 255, 0.15), rgba(238, 242, 255, 0.1));
+            border-radius: 16px;
+            padding: 20px 16px;
+            border: 1px solid var(--border-color);
+        }
+        .rank-tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .rank-tab {
+            font-size: 24px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .rank-tab.active {
+            color: var(--main-color);
+        }
+        .rank-tab.male.active {
+            color: var(--second-color);
+        }
+        .rank-list {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 200px;
+        }
+        .rank-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .rank-avatar-big {
+            width: 90px;
+            height: 90px;
+            border-radius: 50% !important;
+            object-fit: cover;
+            border: 4px solid;
+        }
+        .rank-avatar-big.rank1 {
+            border-color: #FFD700;
+            width: 100px;
+            height: 100px;
+        }
+        .rank-avatar-big.rank2 {
+            border-color: #C0C0C0;
+        }
+        .rank-avatar-big.rank3 {
+            border-color: #CD7F32;
+        }
+        .rank-name-big {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90px;
+        }
+        .rank-num-big {
+            font-size: 48px;
+            font-weight: 700;
+            color: rgba(99, 102, 241, 0.2);
+            line-height: 1;
+        }
+        .member-section {
+            margin: 12px 16px;
+        }
+        .member-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .member-title-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-btn {
+            padding: 6px 14px;
+            background: rgba(224, 231, 255, 0.1);
+            border: 1px solid rgba(191, 219, 254, 0.3);
+            border-radius: 16px;
+            font-size: 14px;
+            color: var(--text-light);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .member-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        .member-card:active {
+            background: rgba(99, 102, 241, 0.08);
+        }
+        .member-avatar-wrap {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--main-gradient);
+            padding: 3px;
+            flex-shrink: 0;
+        }
+        .member-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .member-badge {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            background: var(--main-gradient);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+            z-index: 2;
+            white-space: nowrap;
+        }
+        .member-avatar-play {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 26px;
+            height: 26px;
+            background: rgba(99, 102, 241, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            z-index: 2;
+        }
+        .member-info {
+            flex: 1;
+            padding-top: 4px;
+            min-width: 0;
+        }
+        .member-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .member-name-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+        .member-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 80px;
+            line-height: 22px;
+        }
+        .member-constellation {
+            font-size: 15px;
+            color: var(--text-light);
+            white-space: nowrap;
+            line-height: 22px;
+        }
+        .member-gender {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+            line-height: 22px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .member-gender.female {
+            background: rgba(244, 114, 182, 0.2);
+            color: #F472B6;
+        }
+        .member-gender.male {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3B82F6;
+        }
+        .member-age {
+            min-width: 28px;
+            text-align: center;
+            background: rgba(191, 219, 254, 0.2);
+            color: var(--text-light);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            flex-shrink: 0;
+            line-height: 16px;
+            white-space: nowrap;
+        }
+        .member-status {
+            background: rgba(167, 243, 208, 0.2);
+            color: #10B981;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            flex-shrink: 0;
+            white-space: nowrap;
+            line-height: 16px;
+        }
+        .member-location {
+            background: rgba(224, 231, 255, 0.2);
+            color: var(--text-light);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            white-space: nowrap;
+            line-height: 16px;
+        }
+        .member-desc {
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            line-height: 1.5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .member-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .tag-normal {
+            background: rgba(191, 219, 254, 0.1);
+            color: var(--text-light);
+            border: 1px solid rgba(191, 219, 254, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .tag-male {
+            background: rgba(59, 130, 246, 0.1);
+            color: #93C5FD;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .member-signature {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .member-price {
+            font-size: 14px;
+            color: var(--main-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .member-star {
+            font-size: 24px;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            flex-shrink: 0;
+            align-self: flex-start;
+            padding-top: 2px;
+        }
+        .member-star:active {
+            color: var(--main-color);
+        }
+        .order-btn {
+            background: var(--main-gradient);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+        .modal-mask {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #1A1A1A;
+            width: 92%;
+            max-width: 450px;
+            border-radius: 16px;
+            padding: 24px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        .form-line {
+            margin-bottom: 18px;
+        }
+        .form-label {
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+            color: rgba(255,255,255,0.7);
+        }
+        .form-select, .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(191, 219, 254, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+        .price-tip {
+            font-size: 13px;
+            color: var(--main-color);
+            margin-top: 6px;
+        }
+        .total-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--main-color);
+            text-align: center;
+            margin: 10px 0;
+        }
+        .close-btn {
+            text-align: center;
+            margin-top: 16px;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #121212;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 8px;
+            border-top: 1px solid rgba(191, 219, 254, 0.1);
+            z-index: 98;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: var(--main-color);
+        }
+        .nav-item div {
+            font-size: 24px;
+            line-height: 1;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .empty-tip {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+        /* 新增：付款弹窗专属样式 */
+        .pay-modal-content {
+            max-width: 400px;
+            text-align: center;
+        }
+        .pay-order-info {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .pay-order-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .pay-order-row:last-child {
+            margin-bottom: 0;
+        }
+        .pay-order-label {
+            color: rgba(255,255,255,0.6);
+        }
+        .pay-order-value {
+            color: #fff;
+            font-weight: 500;
+        }
+        .pay-order-value.total {
+            color: var(--main-color);
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .pay-qrcode-wrap {
+            background: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            margin: 20px auto;
+            width: 220px;
+            height: 220px;
+        }
+        .pay-qrcode {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .pay-countdown {
+            font-size: 15px;
+            color: var(--danger-color);
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        .pay-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .pay-btn-group {
+            display: flex;
+            gap: 12px;
+        }
+        .pay-btn {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .pay-btn.confirm {
+            background: var(--success-color);
+            color: #fff;
+        }
+        .pay-btn.cancel {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div id="page-home" class="page active">
+    <div class="search-box">
+        <input type="text" class="search-input" id="homeSearch" placeholder="搜索店员">
+        <button class="search-btn" onclick="searchMember()">搜索</button>
+    </div>
+    <div class="notice-bar">
+        <div>
+            <div class="notice-title">公告栏</div>
+            <div class="notice-text" id="noticeText">欢迎来到GTI陪玩俱乐部！王者荣耀/和平精英连麦，绿色视频，恋爱体验，通宵陪玩更优惠~</div>
+        </div>
+        <div class="notice-arrow">></div>
+    </div>
+    <div class="week-rank">
+        <div class="week-rank-title">👋 每周周榜</div>
+        <div id="weekRankList"></div>
+    </div>
+    <div class="rank-section">
+        <div class="rank-tabs">
+            <div class="rank-tab active" data-gender="female" onclick="switchTopRank('female')">
+                <span>♀</span>女神榜
+            </div>
+            <div class="rank-tab male" data-gender="male" onclick="switchTopRank('male')">
+                <span>♂</span>男神榜
+            </div>
+        </div>
+        <div class="rank-list" id="topRankList"></div>
+    </div>
+    <div class="member-section">
+        <div class="member-title">
+            <div class="member-title-text">👋 推荐店员</div>
+            <button class="filter-btn">🔍 筛选</button>
+        </div>
+        <div class="member-list" id="memberList"></div>
+    </div>
+</div>
+
+<div id="page-list" class="page">
+    <div class="member-section">
+        <div class="member-title">
+            <div class="member-title-text">👋 全部店员</div>
+            <button class="filter-btn">🔍 筛选</button>
+        </div>
+        <div class="member-list" id="allMemberList"></div>
+    </div>
+</div>
+
+<div id="page-order" class="page">
+    <div class="member-title" style="padding:16px">
+        <div class="member-title-text">📜 我的订单</div>
+    </div>
+    <div class="admin-table-wrap" style="padding:0 16px;">
+        <table class="admin-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align:left;padding:10px 8px;font-size:13px;color:rgba(255,255,255,0.5);border-bottom:1px solid rgba(255,255,255,0.05);">订单号</th>
+                    <th style="text-align:left;padding:10px 8px;font-size:13px;color:rgba(255,255,255,0.5);border-bottom:1px solid rgba(255,255,255,0.05);">陪玩</th>
+                    <th style="text-align:left;padding:10px 8px;font-size:13px;color:rgba(255,255,255,0.5);border-bottom:1px solid rgba(255,255,255,0.05);">金额</th>
+                    <th style="text-align:left;padding:10px 8px;font-size:13px;color:rgba(255,255,255,0.5);border-bottom:1px solid rgba(255,255,255,0.05);">状态</th>
+                </tr>
+            </thead>
+            <tbody id="myOrderTable"></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="page-user" class="page">
+    <div class="member-title" style="padding:16px">
+        <div class="member-title-text">👤 我的</div>
+    </div>
+    <div style="padding:20px 16px;text-align:center;color:rgba(255,255,255,0.5);">
+        <p>用户端仅支持浏览、下单和付款</p>
+        <p style="margin-top:10px;">管理功能请打开【管理员后台】程序</p>
+    </div>
+</div>
+
+<!-- 点单弹窗 -->
+<div class="modal-mask" id="orderModal">
+    <div class="modal-content">
+        <div class="modal-title" id="orderTitle">向 丢丢儿 提交点单</div>
+        <input type="hidden" id="currentPlayerId">
+        <div class="form-line">
+            <label class="form-label">选择服务项目</label>
+            <select class="form-select" id="serviceType" onchange="calcTotalPrice()">
+                <option value="">请选择服务项目</option>
+            </select>
+            <div class="price-tip" id="servicePriceTip">单价：- 元/小时</div>
+        </div>
+        <div class="form-line">
+            <label class="form-label">选择服务时长</label>
+            <select class="form-select" id="serviceTime" onchange="calcTotalPrice()">
+                <option value="1">1小时</option>
+                <option value="2">2小时</option>
+                <option value="3">3小时</option>
+                <option value="5">5小时</option>
+                <option value="10">包天（10小时）</option>
+            </select>
+        </div>
+        <div class="total-price" id="totalPrice">订单总价：¥ 0.00</div>
+        <div class="form-line">
+            <label class="form-label">联系微信（必填）</label>
+            <input type="text" class="form-input" id="userWx" placeholder="请输入微信号">
+        </div>
+        <div class="form-line">
+            <label class="form-label">备注需求</label>
+            <input type="text" class="form-input" id="userRemark" placeholder="游戏ID/特殊要求">
+        </div>
+        <button class="order-btn" style="width:100%;" onclick="createOrder()">提交订单</button>
+        <div class="close-btn" onclick="closeOrder()">取消</div>
+    </div>
+</div>
+
+<!-- 新增：付款弹窗 -->
+<div class="modal-mask" id="payModal">
+    <div class="modal-content pay-modal-content">
+        <div class="modal-title">请扫码付款</div>
+        <div class="pay-order-info">
+            <div class="pay-order-row">
+                <span class="pay-order-label">订单号</span>
+                <span class="pay-order-value" id="payOrderNo">-</span>
+            </div>
+            <div class="pay-order-row">
+                <span class="pay-order-label">服务项目</span>
+                <span class="pay-order-value" id="payServiceType">-</span>
+            </div>
+            <div class="pay-order-row">
+                <span class="pay-order-label">服务时长</span>
+                <span class="pay-order-value" id="payServiceTime">-</span>
+            </div>
+            <div class="pay-order-row">
+                <span class="pay-order-label">应付金额</span>
+                <span class="pay-order-value total" id="payTotalPrice">¥ 0.00</span>
+            </div>
+        </div>
+        <div class="pay-countdown" id="payCountdown">付款剩余时间：15:00</div>
+        <div class="pay-qrcode-wrap">
+            <img src="" id="payQrcode" class="pay-qrcode" alt="收款二维码" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 200 200\'><rect width=\'200\' height=\'200\' fill=\'%23ffffff\'/><rect x=\'20\' y=\'20\' width=\'160\' height=\'160\' fill=\'%236366F1\'/><rect x=\'40\' y=\'40\' width=\'120\' height=\'120\' fill=\'%23ffffff\'/><path d=\'M60,60 L60,140 L140,140 L140,60 Z\' fill=\'%236366F1\'/><text x=\'50%\' y=\'50%\' font-size=\'14\' fill=\'white\' text-anchor=\'middle\' dy=\'.3em\'>请替换收款码</text></svg>'">
+        </div>
+        <div class="pay-desc" id="payDesc">请使用微信/支付宝扫码付款，付款后点击「我已付款」按钮，管理员会尽快联系您</div>
+        <div class="pay-btn-group">
+            <button class="pay-btn cancel" onclick="cancelPayOrder()">取消订单</button>
+            <button class="pay-btn confirm" onclick="confirmPay()">我已付款</button>
+        </div>
+    </div>
+</div>
+
+<div class="footer-nav">
+    <div class="nav-item active" onclick="switchPage('home')">
+        <div>♡</div><span>首页</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('list')">
+        <div>🎁</div><span>全部</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('order')">
+        <div>📜</div><span>订单</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('user')">
+        <div>👤</div><span>我的</span>
+    </div>
+</div>
+
+<script>
+    // 全局配置
+    const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='200' height='200' fill='%236366F1'/><text x='50%' y='50%' font-size='60' fill='white' text-anchor='middle' dy='.3em'>GTI</text></svg>";
+    // 默认收款配置（和后台同步）
+    const defaultPayConfig = {
+        qrcodeUrl: "", // 收款二维码图片链接
+        payDesc: "请使用微信/支付宝扫码付款，付款后点击「我已付款」按钮，管理员会尽快联系您",
+        expireMinutes: 15, // 付款超时时间（分钟）
+    };
+    // 订单状态枚举
+    const ORDER_STATUS = {
+        UNPAY: 0, // 待付款
+        PENDING: 1, // 待处理（已付款）
+        FINISH: 2, // 已完成
+        CANCEL: 3 // 已取消
+    };
+
+    let currentPlayer = null; // 当前选中的陪玩对象
+    let currentPayOrder = null; // 当前付款中的订单
+    let payCountdownTimer = null; // 付款倒计时定时器
+    let currentTopRankGender = "female";
+    let imgLoadCache = {};
+
+    // 安全读写本地存储（和管理员端共用key，实现对接）
+    function safeGetStorage(key) {
+        try {
+            return JSON.parse(localStorage.getItem(key)) || null;
+        } catch (e) {
+            console.warn("数据读取失败", e);
+            return null;
+        }
+    }
+
+    function safeSetStorage(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch (e) {
+            console.warn("数据保存失败", e);
+            alert("浏览器隐私模式下无法保存订单，请关闭无痕模式");
+            return false;
+        }
+    }
+
+    // 金额格式化
+    function formatAmount(amount) {
+        if (!amount) return "0.00";
+        return parseFloat(amount).toFixed(2);
+    }
+
+    // 时间格式化
+    function formatTime(timestamp) {
+        let date = new Date(timestamp);
+        let month = String(date.getMonth() + 1).padStart(2, '0');
+        let day = String(date.getDate()).padStart(2, '0');
+        let hour = String(date.getHours()).padStart(2, '0');
+        let minute = String(date.getMinutes()).padStart(2, '0');
+        return `${month}-${day} ${hour}:${minute}`;
+    }
+
+    // 生成订单号
+    function generateOrderNo() {
+        const timestamp = new Date().getTime().toString().slice(-8);
+        const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+        return `GTI${timestamp}${random}`;
+    }
+
+    // 初始化默认数据
+    function initDefaultData() {
+        if (!safeGetStorage("gti_members")) {
+            let defaultMembers = [
+                {
+                    id: 1,
+                    name: "丢丢儿",
+                    avatar: defaultAvatar,
+                    constellation: "天蝎座",
+                    gender: "female",
+                    age: 22,
+                    online: "在线",
+                    location: "山东",
+                    desc: "文语|连麦|王者荣耀|和平精英|绿色视频|恋爱体验",
+                    tags: "可御可甜|共情力强|快乐小狗",
+                    signature: "你又逃避，那我买好蛋糕等你💗",
+                    badge: "镇店",
+                    createTime: new Date().getTime(),
+                    priceList: [
+                        { type: "文语聊天", price: 30 },
+                        { type: "连麦陪伴", price: 50 },
+                        { type: "王者荣耀陪玩", price: 60 },
+                        { type: "和平精英陪玩", price: 60 },
+                        { type: "绿色视频", price: 80 }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "瑶瑶公主",
+                    avatar: defaultAvatar,
+                    constellation: "狮子座",
+                    gender: "female",
+                    age: 23,
+                    online: "在线",
+                    location: "天津",
+                    desc: "文语|连麦|王者荣耀|绿色视频|恋爱体验",
+                    tags: "情绪垃圾桶|emo急救包",
+                    signature: "别难过了，我陪你聊会！嘿嘿",
+                    badge: "首席",
+                    createTime: new Date().getTime(),
+                    priceList: [
+                        { type: "文语聊天", price: 25 },
+                        { type: "连麦陪伴", price: 45 },
+                        { type: "王者荣耀陪玩", price: 55 },
+                        { type: "绿色视频", price: 75 }
+                    ]
+                }
+            ];
+            safeSetStorage("gti_members", defaultMembers);
+        }
+        if (!safeGetStorage("gti_orders")) safeSetStorage("gti_orders", []);
+        if (!safeGetStorage("gti_notice")) safeSetStorage("gti_notice", "欢迎来到GTI陪玩俱乐部！王者荣耀/和平精英连麦，绿色视频，恋爱体验，通宵陪玩更优惠~");
+        if (!safeGetStorage("gti_pay_config")) safeSetStorage("gti_pay_config", defaultPayConfig);
+    }
+
+    // 页面切换
+    function switchPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + pageId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach((item, i) => {
+            item.classList.remove('active');
+            if (['home','list','order','user'][i] === pageId) item.classList.add('active');
+        });
+
+        // 切换到订单页时刷新我的订单
+        if (pageId === "order") renderMyOrderTable();
+    }
+
+    // 搜索功能
+    function searchMember() {
+        let keyword = document.getElementById("homeSearch").value.trim().toLowerCase();
+        if (!keyword) {
+            alert("请输入搜索关键词");
+            return;
+        }
+        let members = safeGetStorage("gti_members") || [];
+        let filterMembers = members.filter(item => 
+            item.name.toLowerCase().includes(keyword) || 
+            item.desc.toLowerCase().includes(keyword) || 
+            item.tags.toLowerCase().includes(keyword)
+        );
+        if (filterMembers.length === 0) {
+            alert("未找到相关店员");
+            return;
+        }
+        renderMemberList(filterMembers, "memberList");
+    }
+
+    // 渲染陪玩列表
+    function renderMemberList(members, containerId) {
+        if (members.length === 0) {
+            document.getElementById(containerId).innerHTML = `<div class="empty-tip">暂无陪玩店员</div>`;
+            return;
+        }
+        let html = "";
+        members.forEach(item => {
+            // 计算价格区间
+            let priceRange = "暂无定价";
+            if (item.priceList && item.priceList.length > 0) {
+                const prices = item.priceList.map(p => p.price);
+                const minPrice = Math.min(...prices);
+                const maxPrice = Math.max(...prices);
+                priceRange = minPrice === maxPrice ? `¥${minPrice}/小时起` : `¥${minPrice}-${maxPrice}/小时`;
+            }
+
+            html += `
+            <div class="member-card">
+                <div class="member-avatar-wrap">
+                    <img src="${item.avatar}" class="member-avatar" onerror="if(!imgLoadCache[this.src]){this.src='${defaultAvatar}';imgLoadCache[this.src]=true;}">
+                    <div class="member-badge">${item.badge || ''}</div>
+                    <div class="member-avatar-play">▶</div>
+                </div>
+                <div class="member-info">
+                    <div class="member-name-row">
+                        <div class="member-name-box">
+                            <div class="member-name">${item.name}</div>
+                            <span class="member-constellation">${item.constellation}</span>
+                        </div>
+                        <span class="member-gender ${item.gender}">${item.gender === 'female' ? '♀' : '♂'}</span>
+                        <span class="member-age">${item.age}</span>
+                        <span class="member-status">${item.online}</span>
+                        <span class="member-location">📍${item.location}</span>
+                    </div>
+                    <div class="member-desc">${item.desc}</div>
+                    <div class="member-tags">
+                        ${item.tags.split('|').map(tag => `<span class="tag-${item.gender === 'male' ? 'male' : 'normal'}">${tag}</span>`).join('')}
+                    </div>
+                    <div class="member-signature">${item.signature}</div>
+                    <div class="member-price">${priceRange}</div>
+                    <button class="order-btn" onclick="openOrder(${item.id})">立即点单</button>
+                </div>
+                <div class="member-star">☆</div>
+            </div>
+            `;
+        });
+        document.getElementById(containerId).innerHTML = html;
+    }
+
+    // 渲染周榜
+    function renderWeekRank() {
+        let members = safeGetStorage("gti_members") || [];
+        if (members.length === 0) {
+            document.getElementById("weekRankList").innerHTML = `<div class="empty-tip">暂无排行数据</div>`;
+            return;
+        }
+        let html = "";
+        members.slice(0,4).forEach(item => {
+            html += `
+            <div class="week-rank-item">
+                <div class="rank-avatar-wrap">
+                    <img src="${item.avatar}" class="rank-avatar" onerror="if(!imgLoadCache[this.src]){this.src='${defaultAvatar}';imgLoadCache[this.src]=true;}">
+                    <div class="rank-status"></div>
+                </div>
+                <div class="rank-info">
+                    <div class="rank-name">${item.name}</div>
+                    <div class="rank-desc">在线时长：324:30</div>
+                </div>
+                <div class="rank-actions">
+                    <span class="rank-action">⭐</span>
+                    <span class="rank-action">👋</span>
+                </div>
+            </div>
+            `;
+        });
+        document.getElementById("weekRankList").innerHTML = html;
+    }
+
+    // 女神/男神榜切换
+    function switchTopRank(gender) {
+        currentTopRankGender = gender;
+        document.querySelectorAll(".rank-tab").forEach(tab => {
+            tab.classList.remove("active");
+            if (tab.getAttribute("data-gender") === gender) tab.classList.add("active");
+        });
+        let members = safeGetStorage("gti_members") || [];
+        let filterMembers = members.filter(item => item.gender === gender).slice(0,3);
+        let html = "";
+        if (filterMembers.length >= 3) {
+            html = `
+            <div class="rank-item">
+                <img src="${filterMembers[1].avatar}" class="rank-avatar-big rank2" onerror="if(!imgLoadCache[this.src]){this.src='${defaultAvatar}';imgLoadCache[this.src]=true;}">
+                <div class="rank-name-big">${filterMembers[1].name}</div>
+                <div class="rank-num-big">2</div>
+            </div>
+            <div class="rank-item">
+                <img src="${filterMembers[0].avatar}" class="rank-avatar-big rank1" onerror="if(!imgLoadCache[this.src]){this.src='${defaultAvatar}';imgLoadCache[this.src]=true;}">
+                <div class="rank-name-big">${filterMembers[0].name}</div>
+                <div class="rank-num-big">1</div>
+            </div>
+            <div class="rank-item">
+                <img src="${filterMembers[2].avatar}" class="rank-avatar-big rank3" onerror="if(!imgLoadCache[this.src]){this.src='${defaultAvatar}';imgLoadCache[this.src]=true;}">
+                <div class="rank-name-big">${filterMembers[2].name}</div>
+                <div class="rank-num-big">3</div>
+            </div>
+            `;
+        } else {
+            html = `<div class="empty-tip">暂无该分类排行数据</div>`;
+        }
+        document.getElementById("topRankList").innerHTML = html;
+    }
+
+    // 渲染我的订单列表
+    function renderMyOrderTable() {
+        let orders = safeGetStorage("gti_orders") || [];
+        let html = "";
+        orders.forEach(item => {
+            let statusText = "";
+            let statusColor = "";
+            if (item.status === ORDER_STATUS.UNPAY) {
+                statusText = "待付款";
+                statusColor = "#F59E0B";
+            } else if (item.status === ORDER_STATUS.PENDING) {
+                statusText = "待处理";
+                statusColor = "#3B82F6";
+            } else if (item.status === ORDER_STATUS.FINISH) {
+                statusText = "已完成";
+                statusColor = "#10B981";
+            } else {
+                statusText = "已取消";
+                statusColor = "#6B7280";
+            }
+
+            html += `
+            <tr>
+                <td style="padding:12px 8px;font-size:14px;color:#fff;border-bottom:1px solid rgba(255,255,255,0.05);">${item.orderNo}</td>
+                <td style="padding:12px 8px;font-size:14px;color:#fff;border-bottom:1px solid rgba(255,255,255,0.05);">${item.playerName}</td>
+                <td style="padding:12px 8px;font-size:14px;color:#fff;border-bottom:1px solid rgba(255,255,255,0.05);">¥${formatAmount(item.totalPrice)}</td>
+                <td style="padding:12px 8px;font-size:14px;color:${statusColor};border-bottom:1px solid rgba(255,255,255,0.05);">${statusText}</td>
+            </tr>
+            `;
+        });
+        if (orders.length === 0) {
+            html = `<tr><td colspan="4" class="empty-tip">暂无订单</td></tr>`;
+        }
+        document.getElementById("myOrderTable").innerHTML = html;
+    }
+
+    // 点单弹窗
+    function openOrder(playerId) {
+        let members = safeGetStorage("gti_members") || [];
+        currentPlayer = members.find(item => item.id === playerId);
+        if (!currentPlayer) return;
+
+        // 填充弹窗标题
+        document.getElementById('orderTitle').innerText = `向 ${currentPlayer.name} 提交点单`;
+        document.getElementById('currentPlayerId').value = currentPlayer.id;
+
+        // 动态加载服务选项（从价格表生成）
+        const serviceSelect = document.getElementById('serviceType');
+        serviceSelect.innerHTML = `<option value="">请选择服务项目</option>`;
+        if (currentPlayer.priceList && currentPlayer.priceList.length > 0) {
+            currentPlayer.priceList.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.type;
+                option.setAttribute('data-price', item.price);
+                option.innerText = `${item.type}（¥${item.price}/小时）`;
+                serviceSelect.appendChild(option);
+            });
+        }
+
+        // 重置表单
+        document.getElementById('serviceTime').value = "1";
+        document.getElementById('userWx').value = "";
+        document.getElementById('userRemark').value = "";
+        document.getElementById('servicePriceTip').innerText = "单价：- 元/小时";
+        document.getElementById('totalPrice').innerText = "订单总价：¥ 0.00";
+
+        // 显示弹窗
+        document.getElementById('orderModal').style.display = 'flex';
+    }
+
+    // 关闭点单弹窗
+    function closeOrder() {
+        document.getElementById('orderModal').style.display = 'none';
+        currentPlayer = null;
+    }
+
+    // 计算订单总价
+    function calcTotalPrice() {
+        const serviceSelect = document.getElementById('serviceType');
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+        const unitPrice = parseFloat(selectedOption.getAttribute('data-price') || 0);
+        const hours = parseInt(document.getElementById('serviceTime').value || 0);
+
+        // 更新单价提示
+        document.getElementById('servicePriceTip').innerText = unitPrice > 0 ? `单价：¥ ${formatAmount(unitPrice)} 元/小时` : "单价：- 元/小时";
+        
+        // 计算总价
+        const total = unitPrice * hours;
+        document.getElementById('totalPrice').innerText = `订单总价：¥ ${formatAmount(total)}`;
+
+        return total;
+    }
+
+    // 提交订单（生成待付款订单）
+    function createOrder() {
+        const wx = document.getElementById('userWx').value.trim();
+        const serviceType = document.getElementById('serviceType').value;
+        if (!wx) { alert("请填写微信号"); return; }
+        if (!serviceType) { alert("请选择服务项目"); return; }
+
+        // 计算总价
+        const totalPrice = calcTotalPrice();
+        if (totalPrice <= 0) { alert("请选择有效的服务项目"); return; }
+
+        // 获取选中的服务信息
+        const serviceSelect = document.getElementById('serviceType');
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+        const unitPrice = parseFloat(selectedOption.getAttribute('data-price') || 0);
+        const hours = parseInt(document.getElementById('serviceTime').value);
+        const serviceTimeText = hours === 10 ? "包天（10小时）" : `${hours}小时`;
+
+        // 获取收款配置
+        const payConfig = safeGetStorage("gti_pay_config") || defaultPayConfig;
+        const now = new Date().getTime();
+        const expireTime = now + (payConfig.expireMinutes * 60 * 1000);
+
+        // 生成订单
+        let orders = safeGetStorage("gti_orders") || [];
+        let newOrder = {
+            id: new Date().getTime(),
+            orderNo: generateOrderNo(),
+            playerId: currentPlayer.id,
+            playerName: currentPlayer.name,
+            serviceType: serviceType,
+            serviceTime: serviceTimeText,
+            serviceHours: hours,
+            unitPrice: unitPrice,
+            totalPrice: totalPrice,
+            userWx: wx,
+            userRemark: document.getElementById('userRemark').value,
+            createTime: now,
+            expireTime: expireTime,
+            payTime: null,
+            status: ORDER_STATUS.UNPAY // 待付款
+        };
+
+        orders.unshift(newOrder);
+        safeSetStorage("gti_orders", orders);
+        closeOrder();
+
+        // 打开付款弹窗
+        openPayModal(newOrder);
+    }
+
+    // 打开付款弹窗
+    function openPayModal(order) {
+        currentPayOrder = order;
+        const payConfig = safeGetStorage("gti_pay_config") || defaultPayConfig;
+
+        // 填充订单信息
+        document.getElementById('payOrderNo').innerText = order.orderNo;
+        document.getElementById('payServiceType').innerText = order.serviceType;
+        document.getElementById('payServiceTime').innerText = order.serviceTime;
+        document.getElementById('payTotalPrice').innerText = `¥ ${formatAmount(order.totalPrice)}`;
+        document.getElementById('payDesc').innerText = payConfig.payDesc;
+
+        // 设置收款二维码
+        const qrcodeImg = document.getElementById('payQrcode');
+        if (payConfig.qrcodeUrl) {
+            qrcodeImg.src = payConfig.qrcodeUrl;
+        } else {
+            qrcodeImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='200' height='200' fill='%23ffffff'/><rect x='20' y='20' width='160' height='160' fill='%236366F1'/><rect x='40' y='40' width='120' height='120' fill='%23ffffff'/><path d='M60,60 L60,140 L140,140 L140,60 Z' fill='%236366F1'/><text x='50%' y='50%' font-size='14' fill='white' text-anchor='middle' dy='.3em'>请替换收款码</text></svg>";
+        }
+
+        // 启动倒计时
+        startPayCountdown(order.expireTime);
+
+        // 显示弹窗
+        document.getElementById('payModal').style.display = 'flex';
+    }
+
+    // 关闭付款弹窗
+    function closePayModal() {
+        document.getElementById('payModal').style.display = 'none';
+        if (payCountdownTimer) {
+            clearInterval(payCountdownTimer);
+            payCountdownTimer = null;
+        }
+        currentPayOrder = null;
+        renderMyOrderTable();
+    }
+
+    // 付款倒计时
+    function startPayCountdown(expireTime) {
+        if (payCountdownTimer) clearInterval(payCountdownTimer);
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const leftTime = expireTime - now;
+
+            if (leftTime <= 0) {
+                // 超时自动取消订单
+                autoCancelOrder();
+                return;
+            }
+
+            // 计算分秒
+            const minutes = Math.floor(leftTime / 1000 / 60);
+            const seconds = Math.floor((leftTime / 1000) % 60);
+            document.getElementById('payCountdown').innerText = `付款剩余时间：${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        updateCountdown();
+        payCountdownTimer = setInterval(updateCountdown, 1000);
+    }
+
+    // 超时自动取消订单
+    function autoCancelOrder() {
+        if (!currentPayOrder) return;
+
+        let orders = safeGetStorage("gti_orders") || [];
+        let index = orders.findIndex(item => item.id === currentPayOrder.id);
+        if (index !== -1) {
+            orders[index].status = ORDER_STATUS.CANCEL;
+            safeSetStorage("gti_orders", orders);
+        }
+
+        alert("付款超时，订单已自动取消");
+        closePayModal();
+    }
+
+    // 取消付款订单
+    function cancelPayOrder() {
+        if (!currentPayOrder) return;
+        if (!confirm("确定要取消该订单吗？")) return;
+
+        let orders = safeGetStorage("gti_orders") || [];
+        let index = orders.findIndex(item => item.id === currentPayOrder.id);
+        if (index !== -1) {
+            orders[index].status = ORDER_STATUS.CANCEL;
+            safeSetStorage("gti_orders", orders);
+        }
+
+        alert("订单已取消");
+        closePayModal();
+    }
+
+    // 确认付款
+    function confirmPay() {
+        if (!currentPayOrder) return;
+        if (!confirm("请确认您已完成付款，付款后管理员会尽快通过微信联系您！")) return;
+
+        let orders = safeGetStorage("gti_orders") || [];
+        let index = orders.findIndex(item => item.id === currentPayOrder.id);
+        if (index !== -1) {
+            orders[index].status = ORDER_STATUS.PENDING;
+            orders[index].payTime = new Date().getTime();
+            safeSetStorage("gti_orders", orders);
+        }
+
+        alert("付款确认成功！管理员已收到您的订单，会尽快通过微信联系您，请保持微信畅通~");
+        closePayModal();
+    }
+
+    // 页面初始化
+    window.onload = function() {
+        initDefaultData();
+        let members = safeGetStorage("gti_members") || [];
+        let notice = safeGetStorage("gti_notice") || "";
+        
+        renderMemberList(members, "memberList");
+        renderMemberList(members, "allMemberList");
+        renderWeekRank();
+        switchTopRank("female");
+        document.getElementById("noticeText").innerText = notice;
+    };
+
+    // 页面可见时刷新数据（和管理员后台同步）
+    document.addEventListener("visibilitychange", function() {
+        if (!document.hidden) {
+            let members = safeGetStorage("gti_members") || [];
+            let notice = safeGetStorage("gti_notice") || "";
+            renderMemberList(members, "memberList");
+            renderMemberList(members, "allMemberList");
+            renderWeekRank();
+            switchTopRank(currentTopRankGender);
+            document.getElementById("noticeText").innerText = notice;
+            renderMyOrderTable();
+        }
+    });
+
+    // 点击弹窗空白处关闭
+    document.querySelectorAll(".modal-mask").forEach(modal => {
+        modal.addEventListener("click", function(e) {
+            if (e.target === this) {
+                if (modal.id === "orderModal") closeOrder();
+                if (modal.id === "payModal") closePayModal();
+            }
+        });
+    });
+</script>
+</body>
+</html>
